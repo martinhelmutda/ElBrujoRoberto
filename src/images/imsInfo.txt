@@ -1,0 +1,4 @@
+
+// imsInfo.txt images
+
+n numbers*.gif  6
