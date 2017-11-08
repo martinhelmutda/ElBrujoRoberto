@@ -218,7 +218,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, ActionLi
 		contexto.paint(dbg); 	//Pintamos las im�genes que el director administra
 		
 		reportAccelMemory();
-		drawImage(g2d, numbersPlayer.getCurrentImage(), VWIDTH/2, VHEIGHT/2);
+		contexto.drawImage(g2d, numbersPlayer.getCurrentImage(), VWIDTH/2, VHEIGHT/2);
 		counter = (counter + 1)% 100;   
 	}
 

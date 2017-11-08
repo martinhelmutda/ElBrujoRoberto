@@ -126,7 +126,7 @@ public class GameStateJugando extends JPanel implements GameState, ActionListene
 
 
 
-	   private void drawImage(Graphics2D g2d, BufferedImage im, int x, int y)
+	   public void drawImage(Graphics2D g2d, BufferedImage im, int x, int y)
 	   /* Draw the image, or a yellow box with ?? in it if there is no image. */
 	   { 
 	     if (im == null) {

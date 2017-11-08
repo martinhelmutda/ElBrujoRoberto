@@ -1,7 +1,9 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 public class GameStateListo implements GameState{
 	GameStateContext contextus;
@@ -74,6 +76,12 @@ public class GameStateListo implements GameState{
 
 	@Override
 	public void corriendo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawImage(Graphics2D g2d, BufferedImage currentImage, int i, int j) {
 		// TODO Auto-generated method stub
 		
 	}

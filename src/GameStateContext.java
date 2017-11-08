@@ -1,4 +1,6 @@
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 
 
@@ -33,6 +35,11 @@ public class GameStateContext {
 	public void paint(Graphics brocha) {
 		// TODO Auto-generated method stub
 		actual.paint(brocha);
+	}
+
+	public void drawImage(Graphics2D g2d, BufferedImage currentImage, int i, int j) {
+		// TODO Auto-generated method stub
+		actual.drawImage(g2d,currentImage,i,j);
 	}
 
 }
