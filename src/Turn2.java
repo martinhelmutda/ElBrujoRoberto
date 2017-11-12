@@ -14,7 +14,11 @@ public class Turn2 implements BoardState {
 	private char[] word;
 	private char[] spaceWord;
 	private int i=0;
-	boolean correct;
+
+	
+	private String[] mensaje = {"Bien", "Increíble", "Sigue así", "Casi lo logras", "Cambio de turno"};
+	private int selectionMessage = (int) (Math.random() * 3);
+	
 	
 	public Turn2(Board tab) {
 		this.bigBoard=tab;
@@ -58,8 +62,12 @@ public class Turn2 implements BoardState {
 			case (KeyEvent.VK_X): letra='x';break;
 			case (KeyEvent.VK_Y): letra='y';break;
 			case (KeyEvent.VK_Z): letra='z';break;
-		}compare(letra);
-		cleanLetters(letra);
+		}if(bigBoard.getPalabraActivated()) {
+			compareWord(letra);
+		}else if(!bigBoard.getPalabraActivated()){
+			compare(letra);
+			cleanLetters(letra);
+		}
 	}
 	
 	public String[] usedLetter(char letra){
@@ -86,27 +94,30 @@ public class Turn2 implements BoardState {
 	public void compare(char k) {
 		word=bigBoard.getWord().toCharArray();
 		spaceWord=bigBoard.getSpaceWord().toCharArray();
+		boolean correct=false;
 			for(int i=0; i<spaceWord.length;i++) {
 				if(word[i]==k) {
-					correct=true;
+					bigBoard.clearMessage(); //Se limpia el mensaje
 					spaceWord[i]=k;
+					correct=true;
 					String temporalSpace=new String(spaceWord);
 					bigBoard.setSpaceWord(temporalSpace);
 					System.out.println(temporalSpace);
-					//OJOCHECALO
-				}else{
-					correct=false;
-				}
+					bigBoard.setMessage(mensaje[selectionMessage]);
+					win(); 
+				}	
 			}
-			if(correct) win();
-			else {
-				System.out.println("Error de letra");
-				changeTurn(correct);
-			}	
+			if(!correct){
+					bigBoard.clearMessage(); //Se limpia el mensaje
+					bigBoard.setMessage(mensaje[4]);
+					System.out.println("Error de letra");
+					changeTurn();
+			}
 	}
 	
 	
 	public void compareWord(char k) {
+		bigBoard.clearMessage();
 		word=bigBoard.getWord().toCharArray();
 		tryWord=bigBoard.getTryWord().toCharArray();
 		System.out.println("Todo bien hasta aquí");
@@ -129,7 +140,7 @@ public class Turn2 implements BoardState {
 					bigBoard.setPalabraActivated(false);
 					bigBoard.setPressed(false);
 					if(!bigBoard.getPalabraActivated()) System.out.println("Está desactivada");
-					changeTurn(true);
+					changeTurn();
 				}i++;
 			}
 		}
@@ -163,11 +174,9 @@ public class Turn2 implements BoardState {
 
 
 	@Override
-	public void changeTurn(boolean correct) {
-		if (!correct) {
-			bigBoard.setState(StateFactory.getState(6, bigBoard));
-			bigBoard.setState(StateFactory.getState(3, bigBoard));
-		}
+	public void changeTurn() {
+		bigBoard.setState(StateFactory.getState(6, bigBoard));
+		bigBoard.setState(StateFactory.getState(3, bigBoard));
 	}
 
 	@Override

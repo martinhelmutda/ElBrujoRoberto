@@ -21,7 +21,8 @@ public class Turn1 implements BoardState {
 	private char[] word;
 	private char[] spaceWord;
 	private int i=0;
-	boolean correct;
+	private String[] mensaje = {"Bien", "Increíble", "Sigue así", "Casi lo logras", "Cambio de turno"};
+	private int selectionMessage = (int) (Math.random() * 3);
 	
 	public Turn1(Board tab) {
 		this.bigBoard=tab;
@@ -31,6 +32,7 @@ public class Turn1 implements BoardState {
 	
 
 	@Override
+	//EL JUGADOR inserta las letras
 	public void keyPressed(int key) {
 		// TODO Auto-generated method stub
 		char letra = 0;
@@ -96,31 +98,33 @@ public class Turn1 implements BoardState {
 	@Override
 	public void paint(Graphics brocha) {
 		brocha.setColor(Color.black);		
-		brocha.setFont(new Font("Stencil", Font.PLAIN, 40));
-		brocha.drawString("Jugador 1",400,40);
+		brocha.setFont(new Font("Impact", Font.PLAIN, 40));
+		brocha.drawString("Jugador 1",600,90);
 	}
 
 	
 	public void compare(char k) {
 		word=bigBoard.getWord().toCharArray();
 		spaceWord=bigBoard.getSpaceWord().toCharArray();
+		boolean correct=false;
 			for(int i=0; i<spaceWord.length;i++) {
 				if(word[i]==k) {
-					correct=true;
+					bigBoard.clearMessage(); //Se limpia el mensaje
 					spaceWord[i]=k;
+					correct=true;
 					String temporalSpace=new String(spaceWord);
 					bigBoard.setSpaceWord(temporalSpace);
 					System.out.println(temporalSpace);
-					//OJOCHECALO
-				}else{
-					correct=false;
+					bigBoard.setMessage(mensaje[selectionMessage]);
+					win();
 				}
 			}
-			if(correct) win();
-			else {
-				System.out.println("Error de letra");
-				changeTurn(correct);
-			}	
+			if(!correct){
+					bigBoard.clearMessage(); //Se limpia el mensaje
+					bigBoard.setMessage(mensaje[4]);
+					System.out.println("Error de letra");
+					changeTurn();
+			}
 	}
 	
 	
@@ -142,12 +146,15 @@ public class Turn1 implements BoardState {
 					String lastTemporalSpace=new String(tryWord);
 					bigBoard.setTryWord(lastTemporalSpace);
 					System.out.println(lastTemporalSpace);
+					if(i==word.length-1) {
+						bigBoard.setMessage("Presiona cualquier tecla");
+					}
 				}else{
 					System.out.println("Hay error");
 					bigBoard.setPalabraActivated(false);
 					bigBoard.setPressed(false);
 					if(!bigBoard.getPalabraActivated()) System.out.println("Está desactivada");
-					changeTurn(true);
+					changeTurn();
 				}i++;
 			}
 		}
@@ -156,7 +163,7 @@ public class Turn1 implements BoardState {
 		}
 	}
 
-	
+
 	
 	public void win() {
 		boolean winner=true;
@@ -183,11 +190,9 @@ public class Turn1 implements BoardState {
 
 
 	@Override
-	public void changeTurn(boolean correct) {
-		if (!correct) {
-			bigBoard.setState(StateFactory.getState(6, bigBoard));
-			bigBoard.setState(StateFactory.getState(4, bigBoard));
-		}
+	public void changeTurn() {
+		bigBoard.setState(StateFactory.getState(6, bigBoard));
+		bigBoard.setState(StateFactory.getState(4, bigBoard));
 	}
 
 
