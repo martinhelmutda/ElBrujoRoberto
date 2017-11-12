@@ -1,5 +1,7 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -14,11 +16,13 @@ import javax.swing.JPanel;
 public class Board extends JPanel{
 	
 	/*Contiene la parte de imagen y letras en el tablero, sin embargo, las imágenes ya se han prcargado anteriormente. También 
-	 * sabe si ya ganó alguien*/
+	 * sabe si ya ganó alguien
+	 * LOS MÉTODOS QU ESTÁN AQUÍ SON UNICAMENTE PARA IMPRIMIR BONITO O SABER EL ESTADO DE LAS CLASES Y MENSAJES
+	 * */
 	
 	private BoardState actual;
 	
-	private String[] palabra ={"delfin","elefante","escalera","escuela", "magico", "serpiente", "jirafa", "caballo","flores", "paragua"};
+	private String[] palabra ={"delfin","elefante","escalera","escuela", "magico", "serpiente", "jirafa", "caballo","flores", "mochila"};
 	public String[] letras = {"a", "b", "c", "d", "e", "f", "g", "h", "i", 
 								"j", "k", "l", "m", "n", "ñ", "o", "p", "q",
 								"r", "s", "t", "u", "v", "w", "x", "y", "z"} ;
@@ -29,9 +33,10 @@ public class Board extends JPanel{
 	private String tryWord="";
 	private final static String IMS_FILE = "imsInfo.txt";
 	private Loader imsLoader;
-	private BufferedImage board;
+	private BufferedImage board, mago;
 	private int x, y;
-	private boolean palabraActivated, pressed;
+	private boolean palabraActivated, pressed=false;
+	private String message="";
 	
 	private Rectangle rect = new Rectangle(GamePanel.VWIDTH-130,540,100,100);
 	
@@ -54,6 +59,7 @@ public class Board extends JPanel{
 
 	private void initImages(){
 		board = imsLoader.getImage("board");
+		mago = imsLoader.getImage("MagoRoberto");
 	}
 	
 	@Override
@@ -71,7 +77,8 @@ public class Board extends JPanel{
 		g2d.fillRect(0, 0, 40,20);
 		
 		//DIBUJITOS
-		drawImage(g2d, board, 0,0);
+		//drawImage(g2d, board, 0,0);
+		
 		
 		actual.paintComponent(brocha);
 		
@@ -96,27 +103,31 @@ public class Board extends JPanel{
 		brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
 		Graphics2D g2d= (Graphics2D)brocha;
 			
-		if((actual==StateFactory.getState(3, this))||(actual==StateFactory.getState(4, this))) {
+			drawImage(g2d, mago, 0,0);
+		
+			if((actual==StateFactory.getState(3, this))||(actual==StateFactory.getState(4, this))) {
 			drawImage(g2d, board, 0,0);
 //			brocha.drawString(spacing(),GamePanel.VWIDTH/2 - palabra.length/2, 300);
+			brocha.setColor(Color.blue);		
+			brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
 			if(palabraActivated) {
 				printTryWord(brocha);
-				brocha.setColor(Color.blue);		
-				brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
-				brocha.drawString("Escribe la palabra", 380, 430);
+				brocha.drawString("Escribe la palabra", 380, 340);
 			}
 			else if(!palabraActivated) {
 				printSpaceWord(brocha);
-				brocha.setColor(Color.blue);		
-				brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
 				brocha.drawString("Escribe la letra", GamePanel.VWIDTH/2-85, 340);
 			}
 //			brocha.drawString(getWord(), GamePanel.VWIDTH/2-235, 300);
 			printLetter(brocha); //imprime las letras
+			brocha.setColor(Color.ORANGE);
+			brocha.setFont(new Font("Impact", Font.PLAIN, 35));
+			drawCenteredString(message, GamePanel.VWIDTH,GamePanel.VHEIGHT+100, brocha);
+			g2d.fill(rect);
 		}
-		
-		g2d.fill(rect);
 		actual.paint(brocha);
+		g2d.setStroke(new BasicStroke(7));
+		g2d.drawRect(4, 4, GamePanel.VWIDTH-6, GamePanel.VHEIGHT-6);
 	}
 	
 	
@@ -187,14 +198,14 @@ public class Board extends JPanel{
 	public void printSpaceWord(Graphics brocha) {
 		String[] spaced=spaceWord.split("");
 		for(int i=0;i<spaced.length;i++ ) {
-			brocha.drawString(spaced[i], GamePanel.VWIDTH/2-100+i*40,300 );
+			brocha.drawString(spaced[i], 300+i*40,300 );
 		}
 	}
 	
 	public void printTryWord(Graphics brocha) {
 		String[] spaced2=tryWord.split("");
 		for(int i=0;i<spaced2.length;i++ ) {
-			brocha.drawString(spaced2[i], GamePanel.VWIDTH/2-100+i*40,300 );
+			brocha.drawString(spaced2[i], 300+i*40,300 );
 		}
 	}
 	
@@ -248,5 +259,26 @@ public class Board extends JPanel{
 		}
 		actual.tick();
 	}
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public void clearMessage() {
+		this.message="";
+	}
+	
+	 public void drawCenteredString(String s, int w, int h, Graphics g) {
+		    FontMetrics fm = g.getFontMetrics();
+		    int x = (w - fm.stringWidth(s)) / 2;
+		    int y = (fm.getAscent() + (h - (fm.getAscent() + fm.getDescent())) / 2);
+		    g.drawString(s, x, y);
+		  }
 }
 

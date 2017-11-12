@@ -7,7 +7,7 @@ public interface BoardState {
 	public void paint(Graphics brocha);
 	public void keyPressed(int k);
 	public void paintComponent(Graphics brocha);
-	public void changeTurn(boolean correct);
+	public void changeTurn();
 	public void tick();
 }
 

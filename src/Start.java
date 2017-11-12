@@ -8,12 +8,12 @@ public class Start implements BoardState {
 
 	private Board board;
 	
-	private String[] inicio = {"¿Listo para comenzar?","Listo", "Seleccionar nivel"};
+	private String[] inicio = {"¿Listo para comenzar?","Listo", "Salir"};
 	private int select=1;
 	
 	public Start (Board tab) {
 		this.board = tab;
-		System.out.println("Listo para jugar?");
+//		System.out.println("Listo para jugar?");
 	}
 	
 
@@ -34,7 +34,7 @@ public class Start implements BoardState {
 			}
 		}else if(k == KeyEvent.VK_ENTER || k == KeyEvent.VK_SPACE) {
 			if(select==1) {	//Inicio
-				changeTurn(true);
+				changeTurn();
 			}
 			else if(select==2) {	//Salir
 				System.exit(0);
@@ -46,15 +46,16 @@ public class Start implements BoardState {
 	public void paint(Graphics brocha) {
 		// TODO Auto-generated method stub
 		brocha.setColor(Color.green);
-		brocha.fillRect(0,0,GamePanel.VWIDTH, GamePanel.VHEIGHT);
+//		brocha.fillRect(0,0,GamePanel.VWIDTH, GamePanel.VHEIGHT);
 		for(int i=0;i<inicio.length;i++) { 	//Recorre e imprime todas las opciones
 			if(i==select) {
 				brocha.setColor(Color.blue);
 			}else{
-				brocha.setColor(Color.white);
+				brocha.setColor(Color.black);
 			}
 			brocha.setFont(new Font("Marker Felt", Font.PLAIN, 40));
-			brocha.drawString(inicio[i], GamePanel.VWIDTH/2 -50, 250 + i*100); //Esto dibuja una palabra en la coordenada deseada
+//			brocha.drawString(inicio[i], GamePanel.VWIDTH/2 -50, 250 + i*100); //Esto dibuja una palabra en la coordenada deseada
+			board.drawCenteredString(inicio[i],GamePanel.VWIDTH,GamePanel.VHEIGHT+i*150,brocha);
 		}
 	}
 
@@ -74,7 +75,7 @@ public class Start implements BoardState {
 
 
 	@Override
-	public void changeTurn(boolean correct) {
+	public void changeTurn() {
 		board.setState(StateFactory.getState(6, board));
 		board.setState(StateFactory.getState(2, board));
 	}

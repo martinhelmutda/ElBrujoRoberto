@@ -2,3 +2,4 @@
 // imsInfo.txt images
 o balls.jpg
 o board.png
+o MagoRoberto.png

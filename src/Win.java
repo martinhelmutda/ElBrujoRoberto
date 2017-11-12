@@ -42,7 +42,7 @@ public class Win implements BoardState{
 
 
 	@Override
-	public void changeTurn(boolean correct) {
+	public void changeTurn() {
 		// TODO Auto-generated method stub
 		
 	}

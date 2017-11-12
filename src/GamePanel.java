@@ -20,7 +20,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	private static final long serialVersionUID = 1L;
 	static final int VWIDTH = 950;
-	static final int VHEIGHT= 700;
+	static final int VHEIGHT= 650;
 
 	private volatile boolean running = false;//Volatile significa que puede ser cambiada por distintos threads
 	private Thread animator;

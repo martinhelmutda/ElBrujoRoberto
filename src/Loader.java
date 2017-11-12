@@ -363,7 +363,7 @@ public class Loader implements BoardState{
 				brocha.drawString("Comienza", 270, 300);
 			}
 		}else {
-		changeTurn(true);
+		changeTurn();
 		}
 	
 	}
@@ -386,15 +386,18 @@ public class Loader implements BoardState{
 		
 	}
 
-	@Override
-	public void changeTurn(boolean correct) {
-		board.setState(StateFactory.getState(6, board));
-		board.setState(StateFactory.getState(3, board));
-	}
 
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void changeTurn() {
+		// TODO Auto-generated method stub
+		board.setState(StateFactory.getState(6, board));
+		board.setState(StateFactory.getState(3, board));
 		
 	}
 
