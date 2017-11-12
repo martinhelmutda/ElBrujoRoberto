@@ -1,4 +1,4 @@
 
 // imsInfo.txt images
-
-n numbers*.gif  6
+o balls.jpg
+o board.png

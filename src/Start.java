@@ -1,25 +1,21 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
-public class GameStateListo implements GameState{
-	GameStateContext contextus;
+
+public class Start implements BoardState {
+
+	private Board board;
+	
 	private String[] inicio = {"¿Listo para comenzar?","Listo", "Seleccionar nivel"};
 	private int select=1;
 	
-	public GameStateListo(GameStateContext cont){
-		this.contextus = cont;
-		System.out.println("Somos aire");
+	public Start (Board tab) {
+		this.board = tab;
+		System.out.println("Listo para jugar?");
 	}
-
-	@Override
-	public void tick() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	public void keyPressed(int k) {
 		// TODO Auto-generated method stub
@@ -38,7 +34,7 @@ public class GameStateListo implements GameState{
 			}
 		}else if(k == KeyEvent.VK_ENTER || k == KeyEvent.VK_SPACE) {
 			if(select==1) {	//Inicio
-				contextus.setState(StateFactory.getState(2, contextus));
+				changeTurn(true);
 			}
 			else if(select==2) {	//Salir
 				System.exit(0);
@@ -57,32 +53,37 @@ public class GameStateListo implements GameState{
 			}else{
 				brocha.setColor(Color.white);
 			}
-			brocha.setFont(new Font("Arial", Font.PLAIN, 40));
+			brocha.setFont(new Font("Marker Felt", Font.PLAIN, 40));
 			brocha.drawString(inicio[i], GamePanel.VWIDTH/2 -50, 250 + i*100); //Esto dibuja una palabra en la coordenada deseada
 		}
 	}
 
 
-	public void keyReleased(int k) {
+	@Override
+	public void paintComponent(Graphics brocha) {
 		// TODO Auto-generated method stub
 		
 	}
 
+
 	@Override
-	public void menu() {
+	public void win() {
 		// TODO Auto-generated method stub
 		
 	}
 
+
 	@Override
-	public void corriendo() {
+	public void changeTurn(boolean correct) {
+		board.setState(StateFactory.getState(6, board));
+		board.setState(StateFactory.getState(2, board));
+	}
+
+
+	@Override
+	public void tick() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void drawImage(Graphics2D g2d, BufferedImage currentImage, int i, int j) {
-		// TODO Auto-generated method stub
-		
-	}
 }
