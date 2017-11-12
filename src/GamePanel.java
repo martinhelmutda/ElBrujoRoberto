@@ -1,33 +1,35 @@
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	static final int VWIDTH = 800;
-	static final int VHEIGHT= 600;
+	static final int VWIDTH = 950;
+	static final int VHEIGHT= 700;
 
 	private volatile boolean running = false;//Volatile significa que puede ser cambiada por distintos threads
 	private Thread animator;
 	
-	private int FPS=60;
+	private int FPS=40;
 	private long tiempoObj= 1000/FPS;
-	
-	private GameStateContext contexto;
-	
-	private ImagesPlayer numbersPlayer;
+	private boolean pressed=false;
+
+	private Board board;
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(VWIDTH,VHEIGHT));
@@ -37,16 +39,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 		
 		addMouseListener( new MouseAdapter() { 
 			public void mousePressed(MouseEvent e) { 
-				testPress(e.getX(), e.getY()); }
+				testPress(e.getX(), e.getY()); 
+				pressed=true;
+			}
+				
 		});
 		
-		contexto = new GameStateContext();
+		board = new Board();
+		
 	}
+	
+//--------------------------PARTE DE CODIGO
+	
 	
 	public void addNotify(){
 		super.addNotify();
 		start();
 	}
+	
+	private void testPress(int x, int y){
+//		System.out.println(x +" "+y);
+		board.setX(x);
+		board.setY(y);
+		board.setPressed(pressed);
+	}
+	
+	
 	
 	public void start() {
 		running=true;
@@ -82,20 +100,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 
-
 	private void tick() {
 		// TODO Auto-generated method stub
-		contexto.tick();
+		board.tick();
 	}
 	
-	private void testPress(int x, int y) {
-	}
+
 	
 	public void paintComponent(Graphics dbg) {
 		super.paintComponent(dbg);
-		Graphics2D g2d = (Graphics2D)dbg; 
 		dbg.clearRect(0, 0, VWIDTH, VHEIGHT);
-		contexto.paint(dbg); 	//Pintamos las im�genes que el director administra
+		board.paint(dbg); 	//Pintamos las im�genes que el director administra
 	}
 
 	
@@ -107,14 +122,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		contexto.keyPressed(e.getKeyCode());
+		board.keyPressed(e.getKeyCode());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		contexto.keyReleased(e.getKeyCode());
+		
 	}
 
 	
