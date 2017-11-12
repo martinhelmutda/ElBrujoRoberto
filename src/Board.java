@@ -33,12 +33,14 @@ public class Board extends JPanel{
 	private String tryWord="";
 	private final static String IMS_FILE = "imsInfo.txt";
 	private Loader imsLoader;
-	private BufferedImage board, mago;
+	private BufferedImage board, mago, pollo, panda, gana;
 	private int x, y;
-	private boolean palabraActivated, pressed=false;
+	private boolean palabraActivated, pressed=false, isWin=false;
 	private String message="";
+	private String jugador="";
 	
-	private Rectangle rect = new Rectangle(GamePanel.VWIDTH-130,540,100,100);
+	
+	private Rectangle rect = new Rectangle(GamePanel.VWIDTH-163,438,125,195);
 	
 	public Board() {
 		actual= StateFactory.getState(1, this);
@@ -47,7 +49,8 @@ public class Board extends JPanel{
 		imsLoader = new Loader(IMS_FILE);
 		initImages();
 		
-		spacing();
+		spacingWord();
+		spacingTryWord();
 	}
 	
 	
@@ -60,6 +63,9 @@ public class Board extends JPanel{
 	private void initImages(){
 		board = imsLoader.getImage("board");
 		mago = imsLoader.getImage("MagoRoberto");
+		pollo = imsLoader.getImage("pollo");
+		panda = imsLoader.getImage("panda");
+		gana = imsLoader.getImage("ganaste");
 	}
 	
 	@Override
@@ -106,24 +112,40 @@ public class Board extends JPanel{
 			drawImage(g2d, mago, 0,0);
 		
 			if((actual==StateFactory.getState(3, this))||(actual==StateFactory.getState(4, this))) {
-			drawImage(g2d, board, 0,0);
-//			brocha.drawString(spacing(),GamePanel.VWIDTH/2 - palabra.length/2, 300);
-			brocha.setColor(Color.blue);		
-			brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
-			if(palabraActivated) {
-				printTryWord(brocha);
-				brocha.drawString("Escribe la palabra", 380, 340);
+				drawImage(g2d, board, 0,0);
+				if(jugador=="Jugador 1") {
+					drawImage(g2d, pollo, 745,-60);
+				}else if(jugador=="Jugador 2") {
+					drawImage(g2d, panda, 742,-35);
+				}
+	//			brocha.drawString(spacing(),GamePanel.VWIDTH/2 - palabra.length/2, 300);
+				if(palabraActivated) {
+					printTryWord(brocha);
+					brocha.setColor(Color.blue);		
+					brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
+					brocha.drawString("Escribe la palabra", 380, 340);
+				}
+				else if(!palabraActivated) {
+					printSpaceWord(brocha);
+					brocha.setColor(Color.blue);		
+					brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 20));
+					brocha.drawString("Escribe la letra", GamePanel.VWIDTH/2-85, 340);
+				}
+	//			brocha.drawString(getWord(), GamePanel.VWIDTH/2-235, 300);
+				brocha.setColor(Color.black);		
+				brocha.setFont(new Font("Arial Rounded MT Bold", Font.PLAIN, 40));
+				printLetter(brocha); //imprime las letras
+				brocha.setColor(Color.ORANGE);
+				brocha.setFont(new Font("Impact", Font.PLAIN, 35));
+				drawCenteredString(message, GamePanel.VWIDTH,GamePanel.VHEIGHT+100, brocha);
+				g2d.draw(rect);
 			}
-			else if(!palabraActivated) {
-				printSpaceWord(brocha);
-				brocha.drawString("Escribe la letra", GamePanel.VWIDTH/2-85, 340);
-			}
-//			brocha.drawString(getWord(), GamePanel.VWIDTH/2-235, 300);
-			printLetter(brocha); //imprime las letras
-			brocha.setColor(Color.ORANGE);
-			brocha.setFont(new Font("Impact", Font.PLAIN, 35));
-			drawCenteredString(message, GamePanel.VWIDTH,GamePanel.VHEIGHT+100, brocha);
-			g2d.fill(rect);
+			
+		if(isWin) {
+			drawImage(g2d, gana, 0,0);
+		}
+		if(pressed) {
+			palabraActivated();
 		}
 		actual.paint(brocha);
 		g2d.setStroke(new BasicStroke(7));
@@ -161,22 +183,25 @@ public class Board extends JPanel{
 		this.actual=actual;
 	}
 	
-	public String spacing() {
+	public String spacingWord() {
 		String spaces ="";
-		String spaces2="";
 		String palabraBase = getWord();
 		for(int i=0; i<palabraBase.length(); i++) {
 			spaces = spaces + "_";
 		}
+		setSpaceWord(spaces);
+		return spaceWord;
+	}
+
+	public String spacingTryWord() {
+		String spaces2="";
+		String palabraBase = getWord();
 		for(int i=0; i<palabraBase.length(); i++) {
 			spaces2 = spaces2 + "_";
 		}
-		setSpaceWord(spaces);
 		setTryWord(spaces2);
-		if(palabraActivated) {
-			return tryWord;
-		}
-		return spaceWord;
+		return tryWord;
+		
 	}
 	
 	public void setSpaceWord (String spaceWord) {
@@ -189,6 +214,10 @@ public class Board extends JPanel{
 	
 	public void setTryWord (String tryWord) {
 		this.tryWord = tryWord;
+	}
+	
+	public void clearTry() {
+		spacingTryWord();
 	}
 	
 	public String getSpaceWord() {
@@ -254,10 +283,6 @@ public class Board extends JPanel{
 	
 	// ¿GANA O NO?
 	public void tick() {
-		if(pressed) {
-			palabraActivated();
-		}
-		actual.tick();
 	}
 
 
@@ -280,5 +305,28 @@ public class Board extends JPanel{
 		    int y = (fm.getAscent() + (h - (fm.getAscent() + fm.getDescent())) / 2);
 		    g.drawString(s, x, y);
 		  }
+
+
+	public String getJugador() {
+		return jugador;
+	}
+
+
+	public void setJugador(String jugador) {
+		this.jugador = jugador;
+	}
+
+
+	public boolean isWin() {
+		return isWin;
+	}
+
+
+	public void setWin(boolean isWin) {
+		this.isWin = isWin;
+	}
+
+
+	
 }
 

@@ -3,3 +3,6 @@
 o balls.jpg
 o board.png
 o MagoRoberto.png
+o panda.png
+o pollo.png
+o ganaste.png

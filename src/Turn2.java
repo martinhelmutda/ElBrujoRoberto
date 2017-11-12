@@ -23,13 +23,15 @@ public class Turn2 implements BoardState {
 	public Turn2(Board tab) {
 		this.bigBoard=tab;
 		System.out.println("Turno Jugador 2");
+		bigBoard.clearTry();
+		bigBoard.setJugador("Jugador 2");
 	}
 
 	@Override
 	public void paint(Graphics brocha) {
 		brocha.setColor(Color.black);		
-		brocha.setFont(new Font("Stencil", Font.PLAIN, 40));
-		brocha.drawString("Jugador 2",400,40);
+		brocha.setFont(new Font("Impact", Font.PLAIN, 40));
+		brocha.drawString("Jugador 2",550,90);
 	}
 
 	@Override
@@ -122,7 +124,7 @@ public class Turn2 implements BoardState {
 		tryWord=bigBoard.getTryWord().toCharArray();
 		System.out.println("Todo bien hasta aquí");
 		if(!Arrays.equals(word, tryWord)) {
-			if((k=='-')&&(i>0)){
+			if((k=='-')&&(i>0)){//Método para borrar letras
 				tryWord[i-1]='_';	
 				String lastTemporalSpace=new String(tryWord);
 				bigBoard.setTryWord(lastTemporalSpace);
@@ -135,6 +137,9 @@ public class Turn2 implements BoardState {
 					String lastTemporalSpace=new String(tryWord);
 					bigBoard.setTryWord(lastTemporalSpace);
 					System.out.println(lastTemporalSpace);
+					if(i==word.length-1) {
+						bigBoard.setMessage("Presiona cualquier tecla");
+					}
 				}else{
 					System.out.println("Hay error");
 					bigBoard.setPalabraActivated(false);
@@ -145,6 +150,7 @@ public class Turn2 implements BoardState {
 			}
 		}
 		else if(Arrays.equals(word, tryWord)) {
+			bigBoard.setWin(true);
 			bigBoard.setState(StateFactory.getState(5, bigBoard));
 		}
 	}
@@ -161,6 +167,7 @@ public class Turn2 implements BoardState {
 			}
 		}if(winner) { 
 			System.out.println("Felicidades Ganador");
+			bigBoard.setWin(true);
 			bigBoard.setState(StateFactory.getState(5, bigBoard));
 		}
 	}

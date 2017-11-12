@@ -27,6 +27,8 @@ public class Turn1 implements BoardState {
 	public Turn1(Board tab) {
 		this.bigBoard=tab;
 		System.out.println("Turno Jugador 1");
+		bigBoard.clearTry();
+		bigBoard.setJugador("Jugador 1");
 	}
 	
 	
@@ -99,7 +101,7 @@ public class Turn1 implements BoardState {
 	public void paint(Graphics brocha) {
 		brocha.setColor(Color.black);		
 		brocha.setFont(new Font("Impact", Font.PLAIN, 40));
-		brocha.drawString("Jugador 1",600,90);
+		brocha.drawString("Jugador 1",550,90);
 	}
 
 	
@@ -159,6 +161,7 @@ public class Turn1 implements BoardState {
 			}
 		}
 		else if(Arrays.equals(word, tryWord)) {
+			bigBoard.setWin(true);
 			bigBoard.setState(StateFactory.getState(5, bigBoard));
 		}
 	}
@@ -175,6 +178,7 @@ public class Turn1 implements BoardState {
 			}
 		}if(winner) { 
 			System.out.println("Felicidades Ganador");
+			bigBoard.setWin(true);
 			bigBoard.setState(StateFactory.getState(5, bigBoard));
 		}
 	}
